@@ -17,6 +17,7 @@ button.style.fontSize = "56px";
 app.append(button);
 
 let counter = 0;
+let moonRate = 1;
 const divLabel = "🌕 Full Moons: " + counter + " 🌕";
 
 const div = document.createElement("div");
@@ -24,34 +25,56 @@ div.innerHTML = divLabel;
 div.style.fontSize = "38px";
 app.append(div);
 
-function incrementMoon() {
-  counter++;
+const upgrade = document.createElement("button");
+upgrade.innerHTML = "Ponder 💭 (-10 🌕) -> (+1 🌕/s)";
+upgrade.style.fontSize = "20px";
+app.append(upgrade);
+
+// Incremental moons function
+function incrementMoon(rate: number) {
+  counter += rate;
   div.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
 }
 
-// Every button click adds a moon
-button.addEventListener("click", function () {
-  incrementMoon();
+// Every wolf button click adds a moon
+button.addEventListener("click", function() {
+  incrementMoon(1);
+});
+
+upgrade.addEventListener("click", function() {
+  if (counter >= 10) {
+    counter -= 10;
+    moonRate++;
+  }
 });
 
 let lastTimestamp = 0;
 let accumulator = 0;
 
+// Use deltaTime and timestamps to keep track of real time and use that to increment moons every second (1000 ms)
 function interval(timestamp: number) {
   const deltaTime = timestamp - lastTimestamp;
   lastTimestamp = timestamp;
 
   accumulator += deltaTime;
 
-  if (accumulator >= 1000) {
-    incrementMoon();
-    accumulator -= 1000;
+  if (accumulator >= 1000/(moonRate)) {
+    incrementMoon(1);
+    console.log("Moons per sec: " + moonRate);
+    accumulator -= 1000/(moonRate);
   }
 
+  if (counter < 10) {
+    upgrade.disabled = true;
+  }
+  else {
+    upgrade.disabled = false;
+  }
   requestAnimationFrame(interval);
 }
 
+// Trigger requestAnimationFrame() once to start
 requestAnimationFrame((timestamp) => {
   lastTimestamp = timestamp;
-  interval(timestamp)
+  interval(timestamp);
 });
