@@ -13,4 +13,18 @@ const gameButton = "🐺";
 
 const button = document.createElement("button");
 button.innerHTML = gameButton;
+button.style.fontSize = "56px";
 app.append(button);
+
+let counter = 0;
+let divLabel = "🌕 Full Moons: " + counter + " 🌕";
+
+const div = document.createElement("div");
+div.innerHTML = divLabel;
+div.style.fontSize = "38px"
+app.append(div);
+
+button.addEventListener("click" , function () {
+    counter++;
+    div.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
+});
