@@ -34,4 +34,24 @@ button.addEventListener("click", function () {
   incrementMoon();
 });
 
-setInterval(incrementMoon, 1000); // Increment moons every 1000 milliseconds
+let lastTimestamp = 0;
+let accumulator = 0;
+
+function interval(timestamp: number) {
+  const deltaTime = timestamp - lastTimestamp;
+  lastTimestamp = timestamp;
+
+  accumulator += deltaTime;
+
+  if (accumulator >= 1000) {
+    incrementMoon();
+    accumulator -= 1000;
+  }
+
+  requestAnimationFrame(interval);
+}
+
+requestAnimationFrame((timestamp) => {
+  lastTimestamp = timestamp;
+  interval(timestamp)
+});
