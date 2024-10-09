@@ -24,7 +24,14 @@ div.innerHTML = divLabel;
 div.style.fontSize = "38px";
 app.append(div);
 
-button.addEventListener("click", function () {
+function incrementMoon() {
   counter++;
   div.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
+}
+
+// Every button click adds a moon
+button.addEventListener("click", function () {
+  incrementMoon();
 });
+
+setInterval(incrementMoon, 1000); // Increment moons every 1000 milliseconds
