@@ -67,7 +67,8 @@ app.append(deaths);
 
 // Incremental moons function
 function incrementMoon(rate: number) {
-  buy(-rate);
+  counter += rate;
+  div.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
 }
 
 // Every wolf button click adds a moon
@@ -77,23 +78,26 @@ button.addEventListener("click", function () {
 
 upgrade1.addEventListener("click", function () {
   moonRate += 0.1;
-  buy(10);
+  buy(10, ponderCount);
   ponderCount++;
   ponders.innerHTML = "💭 Ponders: " + ponderCount + " 💭";
+  upgrade1.innerHTML = "Ponder 💭 (-" + (10 + 10 * ponderCount * 1.15) + " 🌕) -> (+0.1 🌕/s)";
 });
 
 upgrade2.addEventListener("click", function () {
-  moonRate += 2.0;  
-  buy(100);
+  moonRate += 2.0;
+  buy(100, reflectionCount);
   reflectionCount++;
-  reflections.innerHTML = "🪞 Self-Reflections: " + reflectionCount + " 🪞"
+  reflections.innerHTML = "🪞 Self-Reflections: " + reflectionCount + " 🪞";
+  "Self-Reflect 🪞 (-" + + 100 + 100 * reflectionCount * 1.15 + " 🌕) -> (+2.0 🌕/s)"
 });
 
 upgrade3.addEventListener("click", function () {
   moonRate += 50;
-  buy(1000);
+  buy(1000, deathCount);
   deathCount++;
-  deaths.innerHTML = "☠️ Ego-Deaths: " + deathCount + " ☠️"
+  deaths.innerHTML = "☠️ Ego-Deaths: " + deathCount + " ☠️";
+  upgrade3.innerHTML = "Ego-Death ☠️ ( -" + 1000 + 1000 * deathCount * 1.15 + " 🌕) -> (+50 🌕/s)"
 });
 
 let lastTimestamp = 0;
@@ -112,19 +116,19 @@ function interval(timestamp: number) {
     accumulator -= 1000 / moonRate;
   }
 
-  if (counter < 10) {
+  if (counter < 10 + 10 * 1.15 * ponderCount) {
     upgrade1.disabled = true;
   } else {
     upgrade1.disabled = false;
   }
 
-  if (counter < 100) {
+  if (counter < 100 + 100 * 1.15 * reflectionCount) {
     upgrade2.disabled = true;
   } else {
     upgrade2.disabled = false;
   }
 
-  if (counter < 1000) {
+  if (counter < 1000 + 1000 * 1.15 * deathCount) {
     upgrade3.disabled = true;
   } else {
     upgrade3.disabled = false;
@@ -139,8 +143,8 @@ requestAnimationFrame((timestamp) => {
   interval(timestamp);
 });
 
-function buy(cost: number) {
-  counter -= cost;
+function buy(cost: number, counts: number) {
+  counter -= cost + cost * 1.15 * counts;
   div.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
   rate.innerHTML = moonRate.toFixed(1) + " 🌕/s (Auto)";
 }
