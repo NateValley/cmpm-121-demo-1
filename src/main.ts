@@ -58,7 +58,7 @@ function interval(timestamp: number) {
 
   accumulator += deltaTime;
 
-  if ((accumulator >= 1000 / moonRate) && moonRate > 0) {
+  if (accumulator >= 1000 / moonRate && moonRate > 0) {
     incrementMoon(1);
     console.log("Moons per sec: " + moonRate);
     accumulator -= 1000 / moonRate;
