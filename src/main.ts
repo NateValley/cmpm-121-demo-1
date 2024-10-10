@@ -17,7 +17,7 @@ button.style.fontSize = "56px";
 app.append(button);
 
 let counter = 0;
-let moonRate = 1;
+let moonRate = 0;
 const divLabel = "🌕 Full Moons: " + counter + " 🌕";
 
 const div = document.createElement("div");
@@ -37,11 +37,11 @@ function incrementMoon(rate: number) {
 }
 
 // Every wolf button click adds a moon
-button.addEventListener("click", function() {
+button.addEventListener("click", function () {
   incrementMoon(1);
 });
 
-upgrade.addEventListener("click", function() {
+upgrade.addEventListener("click", function () {
   if (counter >= 10) {
     counter -= 10;
     moonRate++;
@@ -58,16 +58,15 @@ function interval(timestamp: number) {
 
   accumulator += deltaTime;
 
-  if (accumulator >= 1000/(moonRate)) {
+  if ((accumulator >= 1000 / moonRate) && moonRate > 0) {
     incrementMoon(1);
     console.log("Moons per sec: " + moonRate);
-    accumulator -= 1000/(moonRate);
+    accumulator -= 1000 / moonRate;
   }
 
   if (counter < 10) {
     upgrade.disabled = true;
-  }
-  else {
+  } else {
     upgrade.disabled = false;
   }
   requestAnimationFrame(interval);
