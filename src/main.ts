@@ -29,6 +29,19 @@ rate.innerHTML = moonRate + " 🌕/s (Auto)";
 rate.style.fontSize = "28px";
 app.append(rate);
 
+interface Item {
+  name: string,
+  cost: number,
+  rate: number
+};
+
+const availableItems : Item[] = [
+  {name: "ponders", cost: 10, rate: 0.1},
+  {name: "reflections", cost: 100, rate: 2},
+  {name: "deaths", cost: 1000, rate: 50}
+];
+
+
 // Initialization and monitoring Ponders
 const upgrade1 = document.createElement("button");
 upgrade1.innerHTML = "Ponder 💭 (-10 🌕) -> (+0.1 🌕/s)";
@@ -68,7 +81,7 @@ app.append(deaths);
 // Incremental moons function
 function incrementMoon(rate: number) {
   counter += rate;
-  div.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
+  div.innerHTML = "🌕 Full Moons: " + counter.toFixed(1) + " 🌕";
 }
 
 // Every wolf button click adds a moon
@@ -77,33 +90,27 @@ button.addEventListener("click", function () {
 });
 
 upgrade1.addEventListener("click", function () {
-  moonRate += 0.1;
-  buy(10, ponderCount);
+  moonRate += availableItems[0].rate;
+  buy(availableItems[0].cost, ponderCount);
   ponderCount++;
   ponders.innerHTML = "💭 Ponders: " + ponderCount + " 💭";
-  upgrade1.innerHTML =
-    "Ponder 💭 (-" + (10 + 10 * ponderCount * 1.15) + " 🌕) -> (+0.1 🌕/s)";
+  upgrade1.innerHTML = "Ponder 💭 (-" + (availableItems[0].cost * Math.pow(1.15, ponderCount)).toFixed(1) + " 🌕) -> (+0.1 🌕/s)";
 });
 
 upgrade2.addEventListener("click", function () {
-  moonRate += 2.0;
-  buy(100, reflectionCount);
+  moonRate += availableItems[1].rate;
+  buy(availableItems[1].cost, reflectionCount);
   reflectionCount++;
   reflections.innerHTML = "🪞 Self-Reflections: " + reflectionCount + " 🪞";
-  upgrade2.innerHTML =
-    "Self-Reflect 🪞 (-" +
-    +100 +
-    100 * reflectionCount * 1.15 +
-    " 🌕) -> (+2.0 🌕/s)";
+  upgrade2.innerHTML = "Self-Reflect 🪞 (-" + (availableItems[1].cost * Math.pow(1.15, reflectionCount)).toFixed(1) + " 🌕) -> (+2.0 🌕/s)";
 });
 
 upgrade3.addEventListener("click", function () {
-  moonRate += 50;
-  buy(1000, deathCount);
+  moonRate += availableItems[2].rate;
+  buy(availableItems[2].cost, deathCount);
   deathCount++;
   deaths.innerHTML = "☠️ Ego-Deaths: " + deathCount + " ☠️";
-  upgrade3.innerHTML =
-    "Ego-Death ☠️ ( -" + 1000 + 1000 * deathCount * 1.15 + " 🌕) -> (+50 🌕/s)";
+  upgrade3.innerHTML = "Ego-Death ☠️ ( -" + (availableItems[2].cost * Math.pow(1.15, deathCount)).toFixed(1) + " 🌕) -> (+50 🌕/s)";
 });
 
 let lastTimestamp = 0;
@@ -118,23 +125,23 @@ function interval(timestamp: number) {
 
   if (accumulator >= 1000 / moonRate && moonRate > 0) {
     incrementMoon(1);
-    console.log("Moons per sec: " + moonRate);
+    console.log("Moons per sec: " + moonRate.toFixed(1));
     accumulator -= 1000 / moonRate;
   }
 
-  if (counter < 10 + 10 * 1.15 * ponderCount) {
+  if (counter < availableItems[0].cost * Math.pow(1.15, ponderCount)) {
     upgrade1.disabled = true;
   } else {
     upgrade1.disabled = false;
   }
 
-  if (counter < 100 + 100 * 1.15 * reflectionCount) {
+  if (counter < availableItems[1].cost * Math.pow(1.15, reflectionCount)) {
     upgrade2.disabled = true;
   } else {
     upgrade2.disabled = false;
   }
 
-  if (counter < 1000 + 1000 * 1.15 * deathCount) {
+  if (counter < availableItems[2].cost * Math.pow(1.15, deathCount)) {
     upgrade3.disabled = true;
   } else {
     upgrade3.disabled = false;
@@ -150,7 +157,7 @@ requestAnimationFrame((timestamp) => {
 });
 
 function buy(cost: number, counts: number) {
-  counter -= cost + cost * 1.15 * counts;
-  div.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
+  counter -= cost * Math.pow(1.15, counts);
+  div.innerHTML = "🌕 Full Moons: " + counter.toFixed(1) + " 🌕";
   rate.innerHTML = moonRate.toFixed(1) + " 🌕/s (Auto)";
 }
