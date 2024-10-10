@@ -81,7 +81,8 @@ upgrade1.addEventListener("click", function () {
   buy(10, ponderCount);
   ponderCount++;
   ponders.innerHTML = "💭 Ponders: " + ponderCount + " 💭";
-  upgrade1.innerHTML = "Ponder 💭 (-" + (10 + 10 * ponderCount * 1.15) + " 🌕) -> (+0.1 🌕/s)";
+  upgrade1.innerHTML =
+    "Ponder 💭 (-" + (10 + 10 * ponderCount * 1.15) + " 🌕) -> (+0.1 🌕/s)";
 });
 
 upgrade2.addEventListener("click", function () {
@@ -89,7 +90,11 @@ upgrade2.addEventListener("click", function () {
   buy(100, reflectionCount);
   reflectionCount++;
   reflections.innerHTML = "🪞 Self-Reflections: " + reflectionCount + " 🪞";
-  "Self-Reflect 🪞 (-" + + 100 + 100 * reflectionCount * 1.15 + " 🌕) -> (+2.0 🌕/s)"
+  upgrade2.innerHTML =
+    "Self-Reflect 🪞 (-" +
+    +100 +
+    100 * reflectionCount * 1.15 +
+    " 🌕) -> (+2.0 🌕/s)";
 });
 
 upgrade3.addEventListener("click", function () {
@@ -97,7 +102,8 @@ upgrade3.addEventListener("click", function () {
   buy(1000, deathCount);
   deathCount++;
   deaths.innerHTML = "☠️ Ego-Deaths: " + deathCount + " ☠️";
-  upgrade3.innerHTML = "Ego-Death ☠️ ( -" + 1000 + 1000 * deathCount * 1.15 + " 🌕) -> (+50 🌕/s)"
+  upgrade3.innerHTML =
+    "Ego-Death ☠️ ( -" + 1000 + 1000 * deathCount * 1.15 + " 🌕) -> (+50 🌕/s)";
 });
 
 let lastTimestamp = 0;
