@@ -2,7 +2,7 @@ import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
-const gameName = "My cool and mysterious game";
+const gameName = "dark side....";
 document.title = gameName;
 
 const header = document.createElement("h1");
@@ -10,7 +10,6 @@ header.innerHTML = gameName;
 app.append(header);
 
 const gameButton = "🐺";
-
 const button = document.createElement("button");
 button.innerHTML = gameButton;
 button.style.fontSize = "56px";
@@ -29,54 +28,83 @@ rate.innerHTML = moonRate + " 🌕/s (Auto)";
 rate.style.fontSize = "28px";
 app.append(rate);
 
-interface Item {
-  name: string,
-  cost: number,
-  rate: number
-};
+// Upgrades Container
+const upgradesContainer = document.createElement("div");
+upgradesContainer.style.display = "flex";
+upgradesContainer.style.flexDirection = "column";
+upgradesContainer.style.width = "600px"
+upgradesContainer.style.gap = "20px";
+upgradesContainer.style.marginTop = "40px";
+app.append(upgradesContainer);
 
-const availableItems : Item[] = [
-  {name: "ponders", cost: 10, rate: 0.1},
-  {name: "reflections", cost: 100, rate: 2},
-  {name: "deaths", cost: 1000, rate: 50}
-];
+// Ponder Container
+const ponderContainer = document.createElement("div");
 
+// Self-Reflections Container
+const reflectionContainer = document.createElement("div");
 
-// Initialization and monitoring Ponders
+// Ego Deaths Container
+const deathsContainer = document.createElement("div");
+
+// Create Upgrade 1 (Ponder) Button and Stats Label
 const upgrade1 = document.createElement("button");
-upgrade1.innerHTML = "Ponder 💭 (-10 🌕) -> (+0.1 🌕/s)";
-upgrade1.style.fontSize = "20px";
-app.append(upgrade1);
 
-let ponderCount = 0;
-const ponders = document.createElement("div");
-ponders.innerHTML = "💭 Ponders: " + ponderCount + " 💭";
-ponders.style.fontSize = "24px";
-app.append(ponders);
+const stats1 = document.createElement("div");
 
-// Initialization and monitoring Self-Reflections
+// Create Upgrade 2 (Self-Reflection) Button and Stats Label
 const upgrade2 = document.createElement("button");
-upgrade2.innerHTML = "Self-Reflect 🪞 (-100 🌕) -> (+2.0 🌕/s)";
-upgrade2.style.fontSize = "20px";
-app.append(upgrade2);
 
-let reflectionCount = 0;
-const reflections = document.createElement("div");
-reflections.innerHTML = "🪞 Self-Reflections: " + reflectionCount + " 🪞";
-reflections.style.fontSize = "24px";
-app.append(reflections);
+const stats2 = document.createElement("div");
 
-// Initialization and monitoring Ego-Deaths
+// Create Upgrade 3 (Ego Death) Button and Stats Label
 const upgrade3 = document.createElement("button");
-upgrade3.innerHTML = "Ego-Death ☠️ (-1000 🌕) -> (+50 🌕/s)";
-upgrade3.style.fontSize = "20px";
-app.append(upgrade3);
 
-let deathCount = 0;
-const deaths = document.createElement("div");
-deaths.innerHTML = "☠️ Ego-Deaths: " + deathCount + " ☠️";
-deaths.style.fontSize = "24px";
-app.append(deaths);
+const stats3 = document.createElement("div");
+
+interface Item {
+  button: HTMLButtonElement;
+  buttonLabel: string;
+  name: string;
+  cost: number;
+  rate: number;
+  count: number;
+  statsLabel: HTMLDivElement;
+  desc: string;
+  container: HTMLDivElement;
+}
+
+const availableItems: Item[] = [
+  { button: upgrade1, 
+    buttonLabel: "Ponder 💭", 
+    name: "💭 Ponders", 
+    cost: 10, 
+    rate: 0.1, 
+    count: 0, 
+    statsLabel: stats1, 
+    desc: "Think",
+    container: ponderContainer
+  },
+  { button: upgrade2, 
+    buttonLabel: "Self-Reflect 🪞", 
+    name: "🪞 Self-Reflections", 
+    cost: 100, 
+    rate: 2, 
+    count: 0, 
+    statsLabel: stats2, 
+    desc: "Think more",
+    container: reflectionContainer
+  },
+  { button: upgrade3, 
+    buttonLabel: "Ego Death ☠️", 
+    name: "☠️ Ego Deaths", 
+    cost: 1000, 
+    rate: 50, 
+    count: 0, 
+    statsLabel: stats3, 
+    desc: "BIG THINK!",
+    container: deathsContainer
+  },
+];
 
 // Incremental moons function
 function incrementMoon(rate: number) {
@@ -89,29 +117,33 @@ button.addEventListener("click", function () {
   incrementMoon(1);
 });
 
-upgrade1.addEventListener("click", function () {
-  moonRate += availableItems[0].rate;
-  buy(availableItems[0].cost, ponderCount);
-  ponderCount++;
-  ponders.innerHTML = "💭 Ponders: " + ponderCount + " 💭";
-  upgrade1.innerHTML = "Ponder 💭 (-" + (availableItems[0].cost * Math.pow(1.15, ponderCount)).toFixed(1) + " 🌕) -> (+0.1 🌕/s)";
-});
+for (let i = 0; i < availableItems.length; i++) {
+  // Containers Set up
+  availableItems[i].container.style.display = "flex";
+  availableItems[i].container.style.justifyContent = "space-between";
+  availableItems[i].container.style.alignItems = "center";
+  upgradesContainer.append(availableItems[i].container);
 
-upgrade2.addEventListener("click", function () {
-  moonRate += availableItems[1].rate;
-  buy(availableItems[1].cost, reflectionCount);
-  reflectionCount++;
-  reflections.innerHTML = "🪞 Self-Reflections: " + reflectionCount + " 🪞";
-  upgrade2.innerHTML = "Self-Reflect 🪞 (-" + (availableItems[1].cost * Math.pow(1.15, reflectionCount)).toFixed(1) + " 🌕) -> (+2.0 🌕/s)";
-});
+  // Button and stats style format
+  availableItems[i].button.style.fontSize = "20px";
+  availableItems[i].container.appendChild(availableItems[i].button);
 
-upgrade3.addEventListener("click", function () {
-  moonRate += availableItems[2].rate;
-  buy(availableItems[2].cost, deathCount);
-  deathCount++;
-  deaths.innerHTML = "☠️ Ego-Deaths: " + deathCount + " ☠️";
-  upgrade3.innerHTML = "Ego-Death ☠️ ( -" + (availableItems[2].cost * Math.pow(1.15, deathCount)).toFixed(1) + " 🌕) -> (+50 🌕/s)";
-});
+  availableItems[i].statsLabel.style.fontSize = "20px";
+  availableItems[i].container.appendChild(availableItems[i].statsLabel);
+
+  // Initialize button and stats labels
+  availableItems[i].button.innerHTML = availableItems[i].buttonLabel + "(-" + availableItems[i].cost + "🌕)";
+  availableItems[i].statsLabel.innerHTML = availableItems[i].name + ": " + availableItems[i].count + "<br>(" + availableItems[i].rate + " 🌕/s)";
+
+  // Event listeners for all upgrades
+  availableItems[i].button.addEventListener("click", function () {
+    moonRate += availableItems[i].rate;
+    buy(availableItems[i].cost, availableItems[i].count);
+    availableItems[i].count++;
+    availableItems[i].statsLabel.innerHTML = availableItems[i].name + ": " + availableItems[i].count + "<br>(" + availableItems[i].rate + " 🌕/s)";
+    availableItems[i].button.innerHTML = availableItems[i].buttonLabel + " (-" + (availableItems[i].cost * Math.pow(1.15, availableItems[i].count)).toFixed(1) + " 🌕)";
+  });
+}
 
 let lastTimestamp = 0;
 let accumulator = 0;
@@ -123,30 +155,21 @@ function interval(timestamp: number) {
 
   accumulator += deltaTime;
 
-  if (accumulator >= 1000 / moonRate && moonRate > 0) {
-    incrementMoon(1);
+  if (accumulator >= 100 / moonRate && moonRate > 0) {
+    incrementMoon(0.1);
     console.log("Moons per sec: " + moonRate.toFixed(1));
-    accumulator -= 1000 / moonRate;
+    accumulator -= 100 / moonRate;
   }
-
-  if (counter < availableItems[0].cost * Math.pow(1.15, ponderCount)) {
-    upgrade1.disabled = true;
-  } else {
-    upgrade1.disabled = false;
+  
+  // Disable upgrade depending on corresponding count
+  for (let i = 0; i < availableItems.length; i++) {
+    if (counter < availableItems[i].cost * Math.pow(1.15, availableItems[i].count)) {
+      availableItems[i].button.disabled = true;
+    } else {
+      availableItems[i].button.disabled = false;
+    }
   }
-
-  if (counter < availableItems[1].cost * Math.pow(1.15, reflectionCount)) {
-    upgrade2.disabled = true;
-  } else {
-    upgrade2.disabled = false;
-  }
-
-  if (counter < availableItems[2].cost * Math.pow(1.15, deathCount)) {
-    upgrade3.disabled = true;
-  } else {
-    upgrade3.disabled = false;
-  }
-
+  
   requestAnimationFrame(interval);
 }
 
