@@ -31,6 +31,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
 
+  /*
+  Background Replacement inspired by JackyPHO (https://github.com/JackyPHO/cmpm-121-demo-1)
+*/
   background-image: url("src/assets/background.webp");
   background-size: cover;
   background-position: center;
