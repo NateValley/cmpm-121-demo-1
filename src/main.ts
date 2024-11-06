@@ -1,5 +1,16 @@
 import "./style.css";
 
+// GLOBAL VARIABLES
+
+let counter = 0;
+let moonRate = 0;
+let lastTimestamp = 0;
+let accumulator = 0;
+const exponentialGrowth = 1.15;
+const milliseconds = 100;
+
+// HTML ELEMENTS
+
 const app: HTMLDivElement = document.querySelector("#app")!;
 
 const gameName = "dark side....";
@@ -10,18 +21,15 @@ header.innerHTML = gameName;
 app.append(header);
 
 const gameButton = "🐺";
-const button = document.createElement("button");
-button.innerHTML = gameButton;
-button.style.fontSize = "56px";
-app.append(button);
+const clickButton = document.createElement("button");
+clickButton.innerHTML = gameButton;
+clickButton.style.fontSize = "56px";
+app.append(clickButton);
 
-let counter = 0;
-let moonRate = 0;
-
-const div = document.createElement("div");
-div.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
-div.style.fontSize = "38px";
-app.append(div);
+const moonCounter = document.createElement("div");
+moonCounter.innerHTML = "🌕 Full Moons: " + counter + " 🌕";
+moonCounter.style.fontSize = "38px";
+app.append(moonCounter);
 
 const rate = document.createElement("div");
 rate.innerHTML = moonRate + " 🌕/s (Auto)";
@@ -156,11 +164,11 @@ const availableItems: Item[] = [
 // Incremental moons function
 function incrementMoon(rate: number) {
   counter += rate;
-  div.innerHTML = "🌕 Full Moons: " + counter.toFixed(1) + " 🌕";
+  moonCounter.innerHTML = "🌕 Full Moons: " + counter.toFixed(1) + " 🌕";
 }
 
 // Every wolf button click adds a moon
-button.addEventListener("click", function () {
+clickButton.addEventListener("click", function () {
   incrementMoon(1);
 });
 
@@ -208,14 +216,12 @@ for (let i = 0; i < availableItems.length; i++) {
       availableItems[i].buttonLabel +
       " (-" +
       (
-        availableItems[i].cost * Math.pow(1.15, availableItems[i].count)
+        availableItems[i].cost *
+        Math.pow(exponentialGrowth, availableItems[i].count)
       ).toFixed(1) +
       " 🌕)";
   });
 }
-
-let lastTimestamp = 0;
-let accumulator = 0;
 
 // Use deltaTime and timestamps to keep track of real time and use that to increment moons every second (1000 ms)
 function interval(timestamp: number) {
@@ -228,7 +234,8 @@ function interval(timestamp: number) {
   for (let i = 0; i < availableItems.length; i++) {
     if (
       counter <
-      availableItems[i].cost * Math.pow(1.15, availableItems[i].count)
+      availableItems[i].cost *
+        Math.pow(exponentialGrowth, availableItems[i].count)
     ) {
       availableItems[i].button.disabled = true;
     } else {
@@ -236,10 +243,10 @@ function interval(timestamp: number) {
     }
   }
 
-  if (accumulator >= 100 / moonRate && moonRate > 0) {
+  if (accumulator >= milliseconds / moonRate && moonRate > 0) {
     incrementMoon(0.1);
     console.log("Moons per sec: " + moonRate.toFixed(1));
-    accumulator -= 100 / moonRate;
+    accumulator -= milliseconds / moonRate;
   }
 
   requestAnimationFrame(interval);
@@ -252,7 +259,7 @@ requestAnimationFrame((timestamp) => {
 });
 
 function buy(cost: number, counts: number) {
-  counter -= cost * Math.pow(1.15, counts);
-  div.innerHTML = "🌕 Full Moons: " + counter.toFixed(1) + " 🌕";
+  counter -= cost * Math.pow(exponentialGrowth, counts);
+  moonCounter.innerHTML = "🌕 Full Moons: " + counter.toFixed(1) + " 🌕";
   rate.innerHTML = moonRate.toFixed(1) + " 🌕/s (Auto)";
 }
