@@ -7,7 +7,7 @@ let moonRate = 0;
 let lastTimestamp = 0;
 let accumulator = 0;
 const exponentialGrowth = 1.15;
-const milliseconds = 100;
+const milliseconds = 1000;
 
 // HTML ELEMENTS
 
@@ -65,25 +65,45 @@ const upgrade1 = document.createElement("button");
 const desc1 = document.createElement("div");
 const stats1 = document.createElement("div");
 
-// Create Upgrade 2 (Self-Reflection) Button and Stats Label
+const ponderImage = document.createElement("img");
+ponderImage.src = "src/assets/ponder.jpg";
+app.append(ponderImage);
+
+// Create Upgrade 2 (Break the Norm) Button and Stats Label
 const upgrade2 = document.createElement("button");
 const desc2 = document.createElement("div");
 const stats2 = document.createElement("div");
+
+const normImage = document.createElement("img");
+normImage.src = "src/assets/normbreaker.jpg";
+app.append(normImage);
 
 // Create Upgrade 3 (Self-Reflection) Button and Stats Label
 const upgrade3 = document.createElement("button");
 const desc3 = document.createElement("div");
 const stats3 = document.createElement("div");
 
+const reflectImage = document.createElement("img");
+reflectImage.src = "src/assets/self-reflect.jpg";
+app.append(reflectImage);
+
 // Create Upgrade 4 (Ego Death) Button and Stats Label
 const upgrade4 = document.createElement("button");
 const desc4 = document.createElement("div");
 const stats4 = document.createElement("div");
 
+const egoDeathImage = document.createElement("img");
+egoDeathImage.src = "src/assets/egoDeath.jpg";
+app.append(egoDeathImage);
+
 // Create Upgrade 5 (Self-Actualization) Button and Stats Label
 const upgrade5 = document.createElement("button");
 const desc5 = document.createElement("div");
 const stats5 = document.createElement("div");
+
+const actualizationImage = document.createElement("img");
+actualizationImage.src = "src/assets/self-actualization.jpg";
+app.append(actualizationImage);
 
 interface Item {
   button: HTMLButtonElement;
@@ -96,6 +116,7 @@ interface Item {
   desc: HTMLDivElement;
   descLabel: string;
   container: HTMLDivElement;
+  image: HTMLImageElement;
 }
 
 const availableItems: Item[] = [
@@ -110,54 +131,59 @@ const availableItems: Item[] = [
     desc: desc1,
     descLabel: "Think on your life for 10 lunar cycles...",
     container: ponderContainer,
+    image: ponderImage,
   },
   {
     button: upgrade2,
     buttonLabel: "Break the Norm 📵",
     name: "📵 Norms Broken",
     cost: 50,
-    rate: 4,
+    rate: 5,
     count: 0,
     stats: stats2,
     desc: desc2,
     descLabel: "Take a break from being a sheep.",
     container: normsContainer,
+    image: normImage,
   },
   {
     button: upgrade3,
     buttonLabel: "Self-Reflect 🪞",
     name: "🪞 Self-Reflections",
-    cost: 100,
-    rate: 10,
+    cost: 120,
+    rate: 80,
     count: 0,
     stats: stats3,
     desc: desc3,
     descLabel: "Take 100 lunar cycles to reflect on your life..",
     container: reflectionContainer,
+    image: reflectImage,
   },
   {
     button: upgrade4,
     buttonLabel: "Ego Death ☠️",
     name: "☠️ Ego Deaths",
     cost: 1000,
-    rate: 50,
+    rate: 100,
     count: 0,
     stats: stats4,
     desc: desc4,
     descLabel: "Transcend yourself for a while..",
     container: deathsContainer,
+    image: egoDeathImage,
   },
   {
     button: upgrade5,
     buttonLabel: "Self-Actualization 🧙",
     name: "🧙 Times Reached",
     cost: 100000,
-    rate: 500,
+    rate: 600,
     count: 0,
     stats: stats5,
     desc: desc5,
     descLabel: "FREE YOURSELF!",
     container: actualContainer,
+    image: actualizationImage,
   },
 ];
 
@@ -200,6 +226,8 @@ for (let i = 0; i < availableItems.length; i++) {
     availableItems[i].rate +
     " 🌕/s)";
 
+  availableItems[i].image.classList.add("hidden");
+
   // Event listeners for all upgrades
   availableItems[i].button.addEventListener("click", function () {
     moonRate += availableItems[i].rate;
@@ -220,6 +248,14 @@ for (let i = 0; i < availableItems.length; i++) {
         Math.pow(exponentialGrowth, availableItems[i].count)
       ).toFixed(1) +
       " 🌕)";
+
+    availableItems[i].image.classList.remove("hidden");
+    availableItems[i].image.classList.add("flash");
+
+    setTimeout(() => {
+      availableItems[i].image.classList.remove("flash");
+      availableItems[i].image.classList.add("hidden");
+    }, 500);
   });
 }
 
@@ -243,10 +279,12 @@ function interval(timestamp: number) {
     }
   }
 
-  if (accumulator >= milliseconds / moonRate && moonRate > 0) {
-    incrementMoon(0.1);
+  if (moonRate > 0) {
+    const secondsPassed = accumulator / milliseconds;
+    const moonsToAdd = secondsPassed * moonRate;
+    incrementMoon(moonsToAdd);
     console.log("Moons per sec: " + moonRate.toFixed(1));
-    accumulator -= milliseconds / moonRate;
+    accumulator = 0;
   }
 
   requestAnimationFrame(interval);

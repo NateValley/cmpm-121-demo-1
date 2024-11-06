@@ -4,6 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
+    <!--
+      Citation: Brace, 11/5/2024, How can i make an image flash when i click one of my buttons?
+      Inspired by Nick Corfmat's animateEmojiOnClick function
+    -->
+    <style>
+      .hidden {
+        display: none;
+        opacity: 0;
+      }
+
+      .flash {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100vw;
+        max-height: 100vh;
+        object-fit: cover;
+        animation: flashAnimation 0.5s ease-in-out forwards;
+        z-index: 9999;
+      }
+
+      @keyframes flashAnimation {
+        from {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
